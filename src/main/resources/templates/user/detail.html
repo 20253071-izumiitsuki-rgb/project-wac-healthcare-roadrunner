@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HealthCare.com</title>
+  <link rel="icon" th:href="@{/img/common/favicon.ico}" href="../../static/img/common/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css" />
+</head>
+
+<body>
+  <header>
+    <a href="#" th:href="@{/}"><img class="header-logo" th:src="@{/img/common/healthcare.png}"
+      src="../../static/img/common/healthcare.png" /><strong>HealthCare.com</strong></a>
+    <a href="#" th:href="@{/logout}"><img th:src="@{/img/common/exit.svg}"
+        src="../../static/img/common/exit.svg" />ログアウト
+    </a>
+  </header>
+  <main>
+    <h1 class="page-title">ユーザー 変更</h1>
+    <p class="error-message">エラーメッセージ</p>
+
+    <div class="card">
+      <div class="card-content">
+        <form method="post">
+          <p>ユーザーID(メールアドレス)</p>
+          <p>xxxx</p>
+          <input type="hidden" name="user_id" />
+          <label for="password">パスワード</label>
+          <input id="password" type="password" name="password" />
+          <div class="mb-10">※未入力の場合、前のパスワードを維持します</div>
+          <label for="user_name">ユーザー名</label>
+          <input id="user_name" type="text" name="user_name" />
+          <p>権限設定</p>
+          <div>
+            <input type="radio" id="role1" name="role" value="ROLE_GENERAL" />
+            <label for="role1"> 一般 </label>
+            <input type="radio" id="role2" name="role" value="ROLE_TOP" />
+            <label for="role2"> 上位 </label>
+            <input type="radio" id="role3" name="role" value="ROLE_ADMIN" />
+            <label for="role3"> 管理者 </label>
+          </div>
+          <p>有効性</p>
+          <div class="mb-10">
+            <input type="radio" name="enabled" value="true" />
+            <label for="enabled1">有効</label>
+            <input type="radio" name="enabled" value="false" />
+            <label for="enabled2">無効</label>
+          </div>
+          <button class="bg-warning mt-10" type="submit" name="update">更新</button>
+        </form>
+
+        <form class="mt-10" method="post" >
+          <input type="hidden" name="user_id" />
+          <button class="bg-danger" type="submit" name="delete">削除</button>
+        </form>
+      </div>
+    </div>
+    <!-- .card -->
+  </main>
+  <footer>&copy; 20xx HealthCare.com</footer>
+</body>
+
+</html>

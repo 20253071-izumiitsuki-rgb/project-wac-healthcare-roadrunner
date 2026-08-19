@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HealthCare.com</title>
+  <link rel="icon" th:href="@{/img/common/favicon.ico}" href="../../static/img/common/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css" />
+</head>
+
+<body>
+  <header>
+    <a href="#" th:href="@{/}"><img class="header-logo" th:src="@{/img/common/healthcare.png}"
+      src="../../static/img/common/healthcare.png" /><strong>HealthCare.com</strong></a>
+    <a href="#" th:href="@{/logout}"><img th:src="@{/img/common/exit.svg}"
+        src="../../static/img/common/exit.svg" />ログアウト
+    </a>
+  </header>
+  <main>
+    <h1 class="page-title">ユーザー 作成</h1>
+    <p class="error-message">エラーメッセージ</p>
+    <div class="card">
+      <div class="card-content">
+        <form method="post">
+          <label for="user_id">ユーザID(メールアドレス)</label>
+          <input id="user_id" type="text" name="user_id" />
+          <label for="password">パスワード</label>
+          <input id="password" type="password" name="password" />
+          <label for="user_name">ユーザー名</label>
+          <input id="user_name" type="text" name="user_name" />
+          <p>権限</p>
+          <div class="mb-10">
+            <input type="radio" name="role" value="ROLE_GENERAL" id="role1" placeholder="" checked />
+            <label for="role1"> 一般 </label>
+            <input type="radio" name="role" value="ROLE_TOP" id="role2" />
+            <label for="role2"> 上位 </label>
+            <input type="radio" name="role" value="ROLE_ADMIN" id="role3" />
+            <label for="role3"> 管理者 </label>
+          </div>
+          <button class="mt-10 bg-warning" type="submit">登録</button>
+        </form>
+      </div>
+    </div>
+    <!-- .card -->
+  </main>
+  <footer>&copy; 20xx HealthCare.com</footer>
+</body>
+
+</html>
