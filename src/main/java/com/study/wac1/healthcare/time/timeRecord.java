@@ -2,7 +2,7 @@ package com.study.wac1.healthcare.time;
 
 public class timeRecord {
   private String date;
-  private Integer duration;
+  private Integer interval;
 
   public String getDate() {
     return date;
@@ -12,16 +12,11 @@ public class timeRecord {
     this.date = date;
   }
 
-  public Integer getDuration() {
-    return duration;
-  }
-
-  public void setDuration(Integer duration) {
-    this.duration = duration;
+  public Integer getInterval() {
+    return interval;
   }
 
   public void setInterval(Integer interval) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setInterval'");
+    this.interval = interval;
   }
 }
