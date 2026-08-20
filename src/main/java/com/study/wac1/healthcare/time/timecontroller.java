@@ -1,6 +1,5 @@
 package com.study.wac1.healthcare.time;
 
-import com.example.healthcare.form.Record;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,7 @@ public class timecontroller {
   public String showTimePage(Model model) {
     // HTMLへこれまでの記録リストを渡す
     model.addAttribute("records", recordList);
-    return "time";
+    return "time/time";
   }
 
   @PostMapping("/time/add")
