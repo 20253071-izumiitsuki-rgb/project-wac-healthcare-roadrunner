@@ -1,0 +1,70 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>運動時間管理 - HealthCare.com</title>
+    <link rel="icon" th:href="@{/img/common/favicon.ico}" href="../static/img/common/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <a href="#" th:href="@{/}"
+        ><img
+          class="header-logo"
+          th:src="@{/img/common/healthcare.png}"
+          src="../static/img/common/healthcare.png"
+        /><strong>HealthCare.com</strong></a
+      >
+      <a href="#" th:href="@{/logout}"
+        ><img th:src="@{/img/common/exit.svg}" src="../static/img/common/exit.svg" />ログアウト
+      </a>
+    </header>
+
+    <main>
+      <h1 class="page-title">運動時間管理</h1>
+
+      <div class="card">
+        <div class="card-content">
+          <h3>新しい記録を追加</h3>
+          <!-- 後でControllerにデータを送るためのformタグです -->
+          <form th:action="@{/time/add}" method="post">
+            <!-- 既存のCSSが効くようにシンプルなdivで囲んでいる -->
+            <div style="margin-bottom: 10px">
+              <label for="date">日付: </label>
+              <input type="date" id="date" name="date" required />
+            </div>
+            <div style="margin-bottom: 15px">
+              <label for="duration">時間(分): </label>
+              <input type="number" id="duration" name="duration" placeholder="例: 30" required />
+            </div>
+            <button type="submit">記録する</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 20px">
+        <div class="card-content">
+          <h3>これまでの記録</h3>
+          <ul>
+            <li th:each="record : ${records}">
+              <span th:text="${record.date}"></span>: <span th:text="${record.duration}"></span>分
+            </li>
+
+            <li>2026-08-20: 30分 (サンプルデータ)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ダッシュボードに戻るリンク -->
+      <div style="margin-top: 20px; text-align: center">
+        <a href="#" th:href="@{/main}">ダッシュボードへ戻る</a>
+      </div>
+    </main>
+
+    <footer>&copy; 20xx HealthCare.com</footer>
+  </body>
+</html>
