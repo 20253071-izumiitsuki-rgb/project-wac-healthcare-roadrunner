@@ -1,21 +1,24 @@
 package com.study.wac1.healthcare.routine;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
-@RestController
+@Controller
 public class RoutineController {
+
+    @GetMapping("/routine")
+    public String showRoutinePage() {
+        return "routine/routine";
+    }
 
     // 時間と行動をセットにするクラス
     public static class RoutineItem {
-        private String time;
-        private String action;
+        public String time;
+        public String action;
 
         public RoutineItem(String time, String action) {
             this.time = time;
@@ -31,11 +34,12 @@ public class RoutineController {
         }
     }
 
+    // シフトごとのスケジュールデータを返す処理
     @GetMapping("/api/routine")
+    @ResponseBody
     public List<RoutineItem> getRoutine(@RequestParam String shift) {
         List<RoutineItem> list = new ArrayList<>();
 
-        // シフトごとに返すデータを分岐
         if ("day".equals(shift)) {
             list.add(new RoutineItem("07:30", "🍳 朝食 ＆ ビタミンサプリ摂取"));
             list.add(new RoutineItem("09:00", "💼 業務開始"));
@@ -54,7 +58,6 @@ public class RoutineController {
             list.add(new RoutineItem("12:30", "🥩 栄養バランスの良い食事"));
             list.add(new RoutineItem("22:00", "📱 画面を消して入眠準備"));
         }
-
         return list;
     }
-    }
+}
