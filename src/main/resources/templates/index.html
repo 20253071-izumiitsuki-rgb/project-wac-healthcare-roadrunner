@@ -11,18 +11,29 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
   </head>
   <body>
-    <hea <header>
-      <a href="#" th:href="@{/}"
-        ><img
+    <header>
+      <!-- 左側のグループ：ロゴとタイトル -->
+      <a href="#" th:href="@{/}">
+        <img
           class="header-logo"
           th:src="@{/img/common/healthcare.png}"
           src="../static/img/common/healthcare.png"
-        /><strong>HealthCare.com</strong></a
-      >
+        />
+        <strong>HealthCare.com</strong>
+      </a>
 
-      <div style="display: flex; align-items: center; gap: 15px;">
-
-        <button id="theme-toggle" style="padding: 5px 10px; font-size: 14px; background-color: var(--white-color); color: var(--dark-gray-color); border: 1px solid var(--light-gray-color);">
+      <!-- 右側のグループ：切り替えボタンとログアウト -->
+      <div style="display: flex; align-items: center; gap: 15px">
+        <button
+          id="theme-toggle"
+          style="
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: var(--white-color);
+            color: var(--dark-gray-color);
+            border: 1px solid var(--light-gray-color);
+          "
+        >
           🌙 ダークモード
         </button>
 
@@ -61,26 +72,26 @@
     <footer>&copy; 2026 HealthCare.com</footer>
 
     <script>
-      const themeToggleBtn = document.getElementById('theme-toggle');
+      const themeToggleBtn = document.getElementById("theme-toggle");
       const body = document.body;
 
       // ページを開いた時：ブラウザに保存された設定を復元
-      const currentTheme = localStorage.getItem('theme');
-      if (currentTheme === 'dark') {
-        body.classList.add('dark-mode');
-        themeToggleBtn.textContent = '☀️ ライトモード';
+      const currentTheme = localStorage.getItem("theme");
+      if (currentTheme === "dark") {
+        body.classList.add("dark-mode");
+        themeToggleBtn.textContent = "☀️ ライトモード";
       }
 
       // ボタンがクリックされた時の処理
-      themeToggleBtn.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
+      themeToggleBtn.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
 
-        if (body.classList.contains('dark-mode')) {
-          localStorage.setItem('theme', 'dark');
-          themeToggleBtn.textContent = '☀️ ライトモード';
+        if (body.classList.contains("dark-mode")) {
+          localStorage.setItem("theme", "dark");
+          themeToggleBtn.textContent = "☀️ ライトモード";
         } else {
-          localStorage.setItem('theme', 'light');
-          themeToggleBtn.textContent = '🌙 ダークモード';
+          localStorage.setItem("theme", "light");
+          themeToggleBtn.textContent = "🌙 ダークモード";
         }
       });
     </script>
