@@ -24,15 +24,9 @@ public class RoutineController {
             this.time = time;
             this.action = action;
         }
-        p
-
-        public String getAction()
-            { return act
-        o
-
-        
-            
-        
+        public String getTime() { return time; }
+        public String getAction() { return action; }
+    }
 
     // シフトごとのスケジュールデータを返す処理
     @GetMapping("/api/routine")
