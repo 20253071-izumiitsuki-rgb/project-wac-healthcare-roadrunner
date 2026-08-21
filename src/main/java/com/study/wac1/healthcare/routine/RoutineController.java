@@ -15,7 +15,6 @@ public class RoutineController {
         return "routine/routine";
     }
 
-    // 時間と行動をセットにするクラス
     public static class RoutineItem {
         public String time;
         public String action;
