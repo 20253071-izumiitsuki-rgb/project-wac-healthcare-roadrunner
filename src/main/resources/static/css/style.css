@@ -180,6 +180,7 @@ ul li {
 
 ul li a {
   text-decoration: none; /* 下線を非表示に */
+  color: var(--dark-gray-color);
 }
 
 ul li:hover {
@@ -278,7 +279,10 @@ footer {
   margin: 10px; /* 外側に10pxの余白を設ける */
 }
 body.dark-mode {
-  --secondary-color: #333333;
-  --white-color: #efefef;
-  --dark-gray-color: #ffffff;
+  --secondary-color: #121212; /* 全体の背景を黒に近い色に */
+  --white-color: #2d2d2d; /* カードの背景を濃いグレーに */
+  --dark-gray-color: #ffffff; /* ヘッダーや文字の色を白に */
+  --primary-color: #6eb5ff; /* メインの青色を明るくして見やすく */
+  --pale-gray-color: #444444; /* ホバー時の背景色も暗く調整 */
+  --light-gray-color: #555555; /* 枠線の色も暗く調整 */
 }
