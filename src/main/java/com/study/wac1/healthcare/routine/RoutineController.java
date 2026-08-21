@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller // 画面とデータの両方を扱えるように変更しました
+@Controller
 public class RoutineController {
 
-    // 1. 画面（templates/routine/routine.html）を表示する処理
     @GetMapping("/routine")
     public String showRoutinePage() {
         return "routine/routine";
@@ -25,13 +24,19 @@ public class RoutineController {
             this.time = time;
             this.action = action;
         }
-        public String getTime() { return time; }
-        public String getAction() { return action; }
-    }
+        p
 
-    // 2. JavaScriptにシフトごとのスケジュールデータを返す処理
+        public String getAction()
+            { return act
+        o
+
+        
+            
+        
+
+    // シフトごとのスケジュールデータを返す処理
     @GetMapping("/api/routine")
-    @ResponseBody // データをJSON形式で返すための設定です
+    @ResponseBody
     public List<RoutineItem> getRoutine(@RequestParam String shift) {
         List<RoutineItem> list = new ArrayList<>();
 
