@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <title>シフト連動ルーティン生成♪</title>
+    <title>シフト連動ルーティン生成</title>
     <style>
       body {
         font-family: sans-serif;
@@ -47,19 +47,19 @@
   </head>
   <body>
     <div class="card">
-      <h2>📅 シフト連動ルーティン生成</h2>
+      <h2>シフト連動ルーティン生成</h2>
       <label for="shift-select">本日のシフトを選択：</label>
       <select id="shift-select">
-        <option value="day">☀️ 日勤 (9:00 〜 18:00)</option>
-        <option value="night">🌙 夜勤 (16:00 〜 翌9:00)</option>
-        <option value="off-morning">💤 明け (夜勤が終わった日)</option>
-        <option value="holiday">☕ 休み (休日)</option>
+        <option value="day">日勤 (9:00 〜 18:00)</option>
+        <option value="night">夜勤 (16:00 〜 翌9:00)</option>
+        <option value="off-morning">明け (夜勤が終わった日)</option>
+        <option value="holiday">休み (休日)</option>
       </select>
 
       <button onclick="generateRoutine()">ルーティンを自動生成</button>
 
       <div id="result-area" style="display: none">
-        <h3>✨ 本日の最適スケジュール</h3>
+        <h3>本日の最適スケジュール</h3>
         <ul id="routine-list" class="routine-list"></ul>
       </div>
     </div>
