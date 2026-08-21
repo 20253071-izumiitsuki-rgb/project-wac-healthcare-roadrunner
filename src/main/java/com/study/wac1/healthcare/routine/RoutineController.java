@@ -17,15 +17,21 @@ public class RoutineController {
 
     // 時間と行動をセットにするクラス
     public static class RoutineItem {
-        private String time;
-        private String action;
+        public String time;
+        public String action;
 
         public RoutineItem(String time, String action) {
             this.time = time;
             this.action = action;
         }
-        public String getTime() { return time; }
-        public String getAction() { return action; }
+
+        public String getTime() {
+            return time;
+        }
+
+        public String getAction() {
+            return action;
+        }
     }
 
     // シフトごとのスケジュールデータを返す処理
