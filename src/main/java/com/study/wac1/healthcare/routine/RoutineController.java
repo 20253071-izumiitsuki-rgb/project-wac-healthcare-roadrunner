@@ -57,10 +57,4 @@ public class RoutineController {
 
         return list;
     }
-
-    @GetMapping("/routine")
-    public String index() {
-        return "forward:/index.html";
     }
-
-}
