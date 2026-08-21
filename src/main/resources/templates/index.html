@@ -34,7 +34,8 @@
             <li><a href="#" th:href="@{/task}">タスク管理 </a></li>
             <li><a href="#" th:href="@{/bmi}">BMI計算</a></li>
             <li><a href="#" th:href="@{/weather}">お天気情報</a></li>
-            <li><a herf="#" th:href="@{/time}">運動時間管理</a></li>
+            <li><a href="#" th:href="@{/time}">運動時間管理</a></li>
+            <li><a href="#" th:href="@{/routine}">シフト連動ルーティン生成</a></li>
           </ul>
         </div>
         <div th:if="${session.userData.role} == 'ROLE_ADMIN'">
