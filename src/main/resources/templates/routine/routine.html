@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <title>シフト連動ルーティン生成</title>
+    <title>シフト・ルーティン管理</title>
     <style>
       body {
         font-family: sans-serif;
@@ -16,6 +16,57 @@
         max-width: 500px;
         margin: auto;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        margin-bottom: 20px;
+      }
+      .weekday {
+        text-align: center;
+        font-weight: bold;
+        padding: 5px 0;
+      }
+      .day {
+        border: 1px solid #ddd;
+        height: 60px;
+        cursor: pointer;
+        text-align: center;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .day:hover {
+        background: #f9f9f9;
+      }
+      .day.selected {
+        border: 2px solid #007bff;
+      }
+      .shift-day {
+        background: #ffeeba;
+      }
+      .shift-night {
+        background: #b8daff;
+      }
+      .shift-off-morning {
+        background: #c3e6cb;
+      }
+      .shift-holiday {
+        background: #f5c6cb;
+      }
+      .shift-label {
+        font-size: 11px;
+        margin-top: 4px;
+        font-weight: bold;
       }
       select,
       button {
@@ -35,58 +86,161 @@
       button:hover {
         background: #0056b3;
       }
+      .controls button {
+        width: auto;
+        padding: 5px 15px;
+        margin: 0;
+      }
       .routine-list {
-        margin-top: 20px;
+        margin-top: 15px;
         padding-left: 20px;
       }
       .routine-item {
-        margin-bottom: 10px;
-        font-size: 16px;
+        margin-bottom: 8px;
+        font-size: 15px;
       }
     </style>
   </head>
   <body>
     <div class="card">
-      <h2>シフト連動ルーティン生成</h2>
-      <label for="shift-select">本日のシフトを選択：</label>
-      <select id="shift-select">
-        <option value="day">日勤 (9:00 〜 18:00)</option>
-        <option value="night">夜勤 (16:00 〜 翌9:00)</option>
-        <option value="off-morning">明け (夜勤が終わった日)</option>
-        <option value="holiday">休み (休日)</option>
-      </select>
+      <div class="header">
+        <div class="controls"><button onclick="changeMonth(-1)">◀</button></div>
+        <h3 id="month-display" style="margin: 0"></h3>
+        <div class="controls"><button onclick="changeMonth(1)">▶</button></div>
+      </div>
 
-      <button onclick="generateRoutine()">ルーティンを生成</button>
+      <div class="calendar" id="calendar"></div>
+
+      <div style="border-top: 1px solid #ddd; padding-top: 15px">
+        <label>選択日: <strong id="selected-date-display">未選択</strong></label>
+        <select id="shift-select">
+          <option value="day">日勤 (9:00 〜 18:00)</option>
+          <option value="night">夜勤 (16:00 〜 翌9:00)</option>
+          <option value="off-morning">明け (夜勤が終わった日)</option>
+          <option value="holiday">休み (休日)</option>
+        </select>
+        <button onclick="saveShift()">シフト登録 ＆ ルーティン表示</button>
+      </div>
 
       <div id="result-area" style="display: none">
-        <h3>本日の最適スケジュール</h3>
+        <h4>ルーティン</h4>
         <ul id="routine-list" class="routine-list"></ul>
       </div>
     </div>
 
     <script>
-      async function generateRoutine() {
+      let currentDate = new Date();
+      let selectedDate = null;
+      let shiftData = {};
+      const shiftLabels = { day: "日勤", night: "夜勤", "off-morning": "明け", holiday: "休み" };
+
+      async function init() {
+        await loadShifts();
+        renderCalendar();
+      }
+
+      async function loadShifts() {
+        try {
+          const res = await fetch("/api/shifts");
+          shiftData = await res.json();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      function changeMonth(diff) {
+        currentDate.setMonth(currentDate.getMonth() + diff);
+        renderCalendar();
+      }
+
+      function renderCalendar() {
+        const cal = document.getElementById("calendar");
+        cal.innerHTML = "";
+
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        document.getElementById("month-display").innerText = `${year}年 ${month + 1}月`;
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const lastDate = new Date(year, month + 1, 0).getDate();
+        const weekDays = ["日", "月", "火", "水", "木", "金", "土"];
+
+        weekDays.forEach((day) => {
+          const d = document.createElement("div");
+          d.className = "weekday";
+          d.innerText = day;
+          cal.appendChild(d);
+        });
+
+        for (let i = 0; i < firstDay; i++) cal.appendChild(document.createElement("div"));
+
+        for (let i = 1; i <= lastDate; i++) {
+          const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
+          const dayDiv = document.createElement("div");
+          dayDiv.className = "day";
+          dayDiv.innerHTML = `<span>${i}</span>`;
+
+          if (shiftData[dateStr]) {
+            dayDiv.classList.add(`shift-${shiftData[dateStr]}`);
+            dayDiv.innerHTML += `<span class="shift-label">${shiftLabels[shiftData[dateStr]]}</span>`;
+          }
+          if (dateStr === selectedDate) dayDiv.classList.add("selected");
+
+          dayDiv.onclick = () => selectDate(dateStr);
+          cal.appendChild(dayDiv);
+        }
+      }
+
+      function selectDate(dateStr) {
+        selectedDate = dateStr;
+        document.getElementById("selected-date-display").innerText = dateStr;
+
+        if (shiftData[dateStr]) {
+          document.getElementById("shift-select").value = shiftData[dateStr];
+          fetchRoutine(shiftData[dateStr]);
+        } else {
+          document.getElementById("result-area").style.display = "none";
+        }
+        renderCalendar();
+      }
+
+      async function saveShift() {
+        if (!selectedDate) return alert("カレンダーから日付を選択してください");
         const shift = document.getElementById("shift-select").value;
-        const routineList = document.getElementById("routine-list");
-        const resultArea = document.getElementById("result-area");
-        routineList.innerHTML = "";
 
         try {
-          const response = await fetch(`/api/routine?shift=${shift}`);
-          const routines = await response.json();
+          await fetch("/api/shifts", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `date=${selectedDate}&shift=${shift}`,
+          });
+          shiftData[selectedDate] = shift;
+          renderCalendar();
+          fetchRoutine(shift);
+        } catch (e) {
+          console.error(e);
+        }
+      }
 
+      async function fetchRoutine(shift) {
+        const routineList = document.getElementById("routine-list");
+        routineList.innerHTML = "";
+        try {
+          const res = await fetch(`/api/routine?shift=${shift}`);
+          const routines = await res.json();
           routines.forEach((item) => {
             const li = document.createElement("li");
             li.className = "routine-item";
             li.innerHTML = `<strong>${item.time}</strong> - ${item.action}`;
             routineList.appendChild(li);
           });
-
-          resultArea.style.display = "block";
-        } catch (error) {
-          console.error("データの取得に失敗しました", error);
+          document.getElementById("result-area").style.display = "block";
+        } catch (e) {
+          console.error(e);
         }
       }
+
+      window.onload = init;
     </script>
   </body>
 </html>
