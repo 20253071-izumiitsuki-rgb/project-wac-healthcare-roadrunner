@@ -34,7 +34,7 @@
             border: 1px solid var(--light-gray-color);
           "
         >
-          🌙 ダークモード
+          ダークモード
         </button>
 
         <a href="#" th:href="@{/logout}">
@@ -79,7 +79,7 @@
       const currentTheme = localStorage.getItem("theme");
       if (currentTheme === "dark") {
         body.classList.add("dark-mode");
-        themeToggleBtn.textContent = "☀️ ライトモード";
+        themeToggleBtn.textContent = " ライトモード";
       }
 
       // ボタンがクリックされた時の処理
@@ -88,10 +88,10 @@
 
         if (body.classList.contains("dark-mode")) {
           localStorage.setItem("theme", "dark");
-          themeToggleBtn.textContent = "☀️ ライトモード";
+          themeToggleBtn.textContent = " ライトモード";
         } else {
           localStorage.setItem("theme", "light");
-          themeToggleBtn.textContent = "🌙 ダークモード";
+          themeToggleBtn.textContent = " ダークモード";
         }
       });
     </script>
