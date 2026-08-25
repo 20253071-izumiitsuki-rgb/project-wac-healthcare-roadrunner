@@ -2,44 +2,20 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <title>シフト・体調ログ管理</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>シフト・ルーティン管理</title>
     <style>
       body {
         font-family: sans-serif;
         padding: 20px;
         background: #f0f2f5;
-        color: #333;
-      }
-      /* ホームボタンのスタイル */
-      .home-btn {
-        display: inline-flex;
-        align-items: center;
-        text-decoration: none;
-        color: #555;
-        background: #fff;
-        padding: 8px 16px;
-        border-radius: 20px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        margin-bottom: 15px;
-        font-size: 14px;
-        font-weight: bold;
-        transition: 0.2s;
-      }
-      .home-btn:hover {
-        background: #e9ecef;
-        color: #007bff;
-      }
-      /* メインレイアウト */
-      .layout-container {
-        max-width: 700px;
-        margin: auto;
       }
       .card {
         background: white;
         padding: 20px;
         border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: auto;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
       .header {
         display: flex;
@@ -57,11 +33,10 @@
         text-align: center;
         font-weight: bold;
         padding: 5px 0;
-        color: #555;
       }
       .day {
         border: 1px solid #ddd;
-        height: 70px;
+        height: 60px;
         cursor: pointer;
         text-align: center;
         border-radius: 4px;
@@ -69,14 +44,12 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        transition: 0.2s;
       }
       .day:hover {
         background: #f9f9f9;
       }
       .day.selected {
         border: 2px solid #007bff;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
       }
       .shift-day {
         background: #ffeeba;
@@ -92,33 +65,23 @@
       }
       .shift-label {
         font-size: 11px;
-        margin-top: 2px;
+        margin-top: 4px;
         font-weight: bold;
       }
-      .log-icons {
-        font-size: 11px;
-        margin-top: 2px;
-        color: #555;
-      }
       select,
-      button,
-      input[type="range"] {
+      button {
         width: 100%;
-        padding: 8px;
+        padding: 10px;
+        margin-top: 10px;
         border-radius: 4px;
-        font-size: 14px;
-      }
-      select {
         border: 1px solid #ccc;
+        font-size: 16px;
       }
       button {
         background: #007bff;
         color: white;
         border: none;
         cursor: pointer;
-        font-weight: bold;
-        padding: 12px;
-        margin-top: 15px;
       }
       button:hover {
         background: #0056b3;
@@ -128,136 +91,58 @@
         padding: 5px 15px;
         margin: 0;
       }
-      .input-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 15px;
-        align-items: end;
-        margin-top: 10px;
-      }
-      .range-label {
-        display: flex;
-        justify-content: space-between;
-        font-size: 13px;
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
       .routine-list {
-        margin-top: 10px;
+        margin-top: 15px;
         padding-left: 20px;
       }
       .routine-item {
         margin-bottom: 8px;
-        font-size: 14px;
-      }
-      .chart-container {
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #eee;
+        font-size: 15px;
       }
     </style>
   </head>
   <body>
-    <div class="layout-container">
-      <!-- ホームボタン -->
-      <a href="/" class="home-btn">◀ ホームに戻る</a>
+    <div class="card">
+      <div class="header">
+        <div class="controls"><button onclick="changeMonth(-1)">◀</button></div>
+        <h3 id="month-display" style="margin: 0"></h3>
+        <div class="controls"><button onclick="changeMonth(1)">▶</button></div>
+      </div>
 
-      <div class="card">
-        <div class="header">
-          <div class="controls"><button onclick="changeMonth(-1)">◀</button></div>
-          <h3 id="month-display" style="margin: 0"></h3>
-          <div class="controls"><button onclick="changeMonth(1)">▶</button></div>
-        </div>
+      <div class="calendar" id="calendar"></div>
 
-        <div class="calendar" id="calendar"></div>
+      <div style="border-top: 1px solid #ddd; padding-top: 15px">
+        <label>選択日: <strong id="selected-date-display">未選択</strong></label>
+        <select id="shift-select">
+          <option value="day">日勤 (9:00 〜 18:00)</option>
+          <option value="night">夜勤 (16:00 〜 翌9:00)</option>
+          <option value="off-morning">明け (夜勤が終わった日)</option>
+          <option value="holiday">休み (休日)</option>
+        </select>
+        <button onclick="saveShift()">シフト登録 ＆ ルーティン表示</button>
+      </div>
 
-        <!-- 入力エリア -->
-        <div style="border-top: 1px solid #ddd; padding-top: 15px">
-          <h4 style="margin-top: 0">
-            記録の追加・編集: <span id="selected-date-display" style="color: #007bff">未選択</span>
-          </h4>
-
-          <div class="input-grid">
-            <div>
-              <div class="range-label">シフト</div>
-              <select id="shift-select">
-                <option value="day">日勤 (9:00 〜 18:00)</option>
-                <option value="night">夜勤 (16:00 〜 翌9:00)</option>
-                <option value="off-morning">明け (夜勤終了日)</option>
-                <option value="holiday">休み (休日)</option>
-              </select>
-            </div>
-            <div>
-              <div class="range-label">
-                <span>睡眠の質</span> <span id="sleep-val" style="color: #007bff">3</span>
-              </div>
-              <input
-                type="range"
-                id="sleep-select"
-                min="1"
-                max="5"
-                value="3"
-                oninput="document.getElementById('sleep-val').innerText = this.value"
-              />
-            </div>
-            <div>
-              <div class="range-label">
-                <span>体調</span> <span id="cond-val" style="color: #ff6384">3</span>
-              </div>
-              <input
-                type="range"
-                id="condition-select"
-                min="1"
-                max="5"
-                value="3"
-                oninput="document.getElementById('cond-val').innerText = this.value"
-              />
-            </div>
-          </div>
-
-          <button onclick="saveLog()">記録を保存 ＆ ルーティン表示</button>
-        </div>
-
-        <!-- ルーティン表示エリア -->
-        <div
-          id="result-area"
-          style="
-            display: none;
-            margin-top: 20px;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-          "
-        >
-          <h4 style="margin-top: 0">おすすめルーティン</h4>
-          <ul id="routine-list" class="routine-list"></ul>
-        </div>
-
-        <!-- グラフ表示エリア -->
-        <div class="chart-container">
-          <h4 style="margin-top: 0; text-align: center">月間コンディション推移</h4>
-          <canvas id="trendChart" height="120"></canvas>
-        </div>
+      <div id="result-area" style="display: none">
+        <h4>ルーティン</h4>
+        <ul id="routine-list" class="routine-list"></ul>
       </div>
     </div>
 
     <script>
       let currentDate = new Date();
       let selectedDate = null;
-      let dailyData = {};
-      let trendChart = null;
-
+      let shiftData = {};
       const shiftLabels = { day: "日勤", night: "夜勤", "off-morning": "明け", holiday: "休み" };
 
       async function init() {
-        await loadLogs();
+        await loadShifts();
         renderCalendar();
       }
 
-      async function loadLogs() {
+      async function loadShifts() {
         try {
-          const res = await fetch("/api/logs");
-          dailyData = await res.json();
+          const res = await fetch("/api/shifts");
+          shiftData = await res.json();
         } catch (e) {
           console.error(e);
         }
@@ -265,9 +150,6 @@
 
       function changeMonth(diff) {
         currentDate.setMonth(currentDate.getMonth() + diff);
-        selectedDate = null;
-        document.getElementById("selected-date-display").innerText = "未選択";
-        document.getElementById("result-area").style.display = "none";
         renderCalendar();
       }
 
@@ -298,64 +180,41 @@
           dayDiv.className = "day";
           dayDiv.innerHTML = `<span>${i}</span>`;
 
-          if (dailyData[dateStr]) {
-            const log = dailyData[dateStr];
-            dayDiv.classList.add(`shift-${log.shift}`);
-            dayDiv.innerHTML += `<span class="shift-label">${shiftLabels[log.shift]}</span>`;
-            dayDiv.innerHTML += `<span class="log-icons">💤${log.sleepQuality} ❤️${log.condition}</span>`;
+          if (shiftData[dateStr]) {
+            dayDiv.classList.add(`shift-${shiftData[dateStr]}`);
+            dayDiv.innerHTML += `<span class="shift-label">${shiftLabels[shiftData[dateStr]]}</span>`;
           }
-
           if (dateStr === selectedDate) dayDiv.classList.add("selected");
 
           dayDiv.onclick = () => selectDate(dateStr);
           cal.appendChild(dayDiv);
         }
-
-        renderChart();
       }
 
       function selectDate(dateStr) {
         selectedDate = dateStr;
         document.getElementById("selected-date-display").innerText = dateStr;
 
-        if (dailyData[dateStr]) {
-          const log = dailyData[dateStr];
-          document.getElementById("shift-select").value = log.shift;
-          document.getElementById("sleep-select").value = log.sleepQuality;
-          document.getElementById("condition-select").value = log.condition;
-          document.getElementById("sleep-val").innerText = log.sleepQuality;
-          document.getElementById("cond-val").innerText = log.condition;
-          fetchRoutine(log.shift);
+        if (shiftData[dateStr]) {
+          document.getElementById("shift-select").value = shiftData[dateStr];
+          fetchRoutine(shiftData[dateStr]);
         } else {
-          document.getElementById("sleep-select").value = 3;
-          document.getElementById("condition-select").value = 3;
-          document.getElementById("sleep-val").innerText = 3;
-          document.getElementById("cond-val").innerText = 3;
           document.getElementById("result-area").style.display = "none";
         }
         renderCalendar();
       }
 
-      async function saveLog() {
+      async function saveShift() {
         if (!selectedDate) return alert("カレンダーから日付を選択してください");
-
         const shift = document.getElementById("shift-select").value;
-        const sleep = document.getElementById("sleep-select").value;
-        const condition = document.getElementById("condition-select").value;
 
         try {
-          await fetch("/api/logs", {
+          await fetch("/api/shifts", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `date=${selectedDate}&shift=${shift}&sleepQuality=${sleep}&condition=${condition}`,
+            body: `date=${selectedDate}&shift=${shift}`,
           });
-
-          dailyData[selectedDate] = {
-            shift: shift,
-            sleepQuality: parseInt(sleep),
-            condition: parseInt(condition),
-          };
-
+          shiftData[selectedDate] = shift;
           renderCalendar();
           fetchRoutine(shift);
         } catch (e) {
@@ -379,88 +238,6 @@
         } catch (e) {
           console.error(e);
         }
-      }
-
-      function renderChart() {
-        const ctx = document.getElementById("trendChart").getContext("2d");
-
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const lastDate = new Date(year, month + 1, 0).getDate();
-
-        const labels = [];
-        const sleepData = [];
-        const conditionData = [];
-
-        for (let i = 1; i <= lastDate; i++) {
-          labels.push(`${i}日`);
-          const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
-
-          if (dailyData[dateStr]) {
-            sleepData.push(dailyData[dateStr].sleepQuality);
-            conditionData.push(dailyData[dateStr].condition);
-          } else {
-            sleepData.push(null);
-            conditionData.push(null);
-          }
-        }
-
-        if (trendChart) {
-          trendChart.destroy();
-        }
-
-        trendChart = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "睡眠の質",
-                data: sleepData,
-                borderColor: "#007bff",
-                backgroundColor: "#007bff",
-                borderWidth: 2,
-                pointRadius: 4,
-                spanGaps: true,
-                tension: 0.3,
-              },
-              {
-                label: "体調",
-                data: conditionData,
-                borderColor: "#ff6384",
-                backgroundColor: "#ff6384",
-                borderWidth: 2,
-                pointRadius: 4,
-                spanGaps: true,
-                tension: 0.3,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                min: 1,
-                max: 5,
-                ticks: { stepSize: 1 },
-              },
-            },
-            plugins: {
-              tooltip: {
-                callbacks: {
-                  afterLabel: function (context) {
-                    const day = context.dataIndex + 1;
-                    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                    if (dailyData[dateStr]) {
-                      return `シフト: ${shiftLabels[dailyData[dateStr].shift]}`;
-                    }
-                    return "";
-                  },
-                },
-              },
-            },
-          },
-        });
       }
 
       window.onload = init;
