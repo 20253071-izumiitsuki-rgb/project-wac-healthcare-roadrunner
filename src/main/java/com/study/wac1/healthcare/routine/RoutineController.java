@@ -37,7 +37,7 @@ public class RoutineController {
 
     @GetMapping("/api/routine")
     @ResponseBody
-    public List<RoutineItem> getRoutine(@RequestParam String shift) {
+    public List<RoutineItem> getRoutine(@RequestParam("shift") String shift) {
         List<RoutineItem> list = new ArrayList<>();
         if ("day".equals(shift)) {
             list.add(new RoutineItem("07:30", "朝食 ＆ ビタミンサプリ摂取"));
@@ -68,7 +68,7 @@ public class RoutineController {
 
     @PostMapping("/api/shifts")
     @ResponseBody
-    public void saveShift(@RequestParam String date, @RequestParam String shift) {
+    public void saveShift(@RequestParam("date") String date, @RequestParam("shift") String shift) {
         shiftData.put(date, shift);
     }
 }
