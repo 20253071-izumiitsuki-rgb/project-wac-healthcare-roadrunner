@@ -42,24 +42,24 @@
 
     <main>
       <h1 class="page-title">
-        <span th:text="${session.userData.userName}">XXXX</span>さんのダッシュボード
+        <span th:text="${session.userData.userName}">XXXX</span>さんの噛む予定の肩、腕.com
       </h1>
       <div class="card">
         <div class="card-content">
-          <h3>一般機能</h3>
+          <h3>肩</h3>
           <ul>
-            <li><a href="#" th:href="@{/task}">タスク管理 </a></li>
+            <li><a href="#" th:href="@{/task}">噛む予定タスク管理 </a></li>
             <li><a href="#" th:href="@{/bmi}">BMI計算</a></li>
-            <li><a href="#" th:href="@{/weather}">お天気情報</a></li>
-            <li><a href="#" th:href="@{/time}">運動時間管理</a></li>
-            <li><a href="#" th:href="@{/routine}">シフト連動ルーティン生成</a></li>
+            <li><a href="#" th:href="@{/weather}">口内のお天気情報</a></li>
+            <li><a href="#" th:href="@{/time}">肩の運動時間管理</a></li>
+            <li><a href="#" th:href="@{/routine}">肩のシフト連動ルーティン生成</a></li>
           </ul>
         </div>
         <div th:if="${session.userData.role} == 'ROLE_ADMIN'">
-          <h3>管理者機能</h3>
+          <h3>腕</h3>
           <ul>
             <li>
-              <a href="#" th:href="@{/user/list}"> [DB]ユーザ管理機能 </a>
+              <a href="#" th:href="@{/user/list}"> [DB]ユーザの腕管理機能 </a>
             </li>
           </ul>
         </div>
