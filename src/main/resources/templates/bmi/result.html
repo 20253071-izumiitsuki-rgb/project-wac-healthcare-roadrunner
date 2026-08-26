@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
@@ -17,17 +17,37 @@
 
   <body>
     <header>
-      <a href="#" th:href="@{/}"
-        ><img
+      <!-- 左側のグループ：ロゴとタイトル -->
+      <a href="#" th:href="@{/}">
+        <img
           class="header-logo"
           th:src="@{/img/common/healthcare.png}"
-          src="../../static/img/common/healthcare.png"
-        /><strong>WebPortal.com</strong></a
-      >
-      <a href="#" th:href="@{/logout}"
-        ><img th:src="@{/img/common/exit.svg}" src="../../static/img/common/exit.svg" />ログアウト
+          src="../static/img/common/healthcare.png"
+        />
+        <strong>HealthCare.com</strong>
       </a>
+
+      <!-- 右側のグループ：切り替えボタンとログアウト -->
+      <div style="display: flex; align-items: center; gap: 15px">
+        <button
+          id="theme-toggle"
+          style="
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: var(--white-color);
+            color: var(--dark-gray-color);
+            border: 1px solid var(--light-gray-color);
+          "
+        >
+          ダークモード
+        </button>
+
+        <a href="#" th:href="@{/logout}">
+          <img th:src="@{/img/common/exit.svg}" src="../static/img/common/exit.svg" />ログアウト
+        </a>
+      </div>
     </header>
+
     <main>
       <h1 class="page-title">BMI 結果</h1>
       <div class="card">
@@ -44,5 +64,27 @@
       <!-- .card -->
     </main>
     <footer>&copy; 2024 WebPortal.com</footer>
+    <script>
+      const themeToggleBtn = document.getElementById("theme-toggle");
+      const body = document.body;
+
+      const currentTheme = localStorage.getItem("theme");
+      if (currentTheme === "dark") {
+        body.classList.add("dark-mode");
+        themeToggleBtn.textContent = " ライトモード";
+      }
+
+      themeToggleBtn.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
+
+        if (body.classList.contains("dark-mode")) {
+          localStorage.setItem("theme", "dark");
+          themeToggleBtn.textContent = " ライトモード";
+        } else {
+          localStorage.setItem("theme", "light");
+          themeToggleBtn.textContent = " ダークモード";
+        }
+      });
+    </script>
   </body>
 </html>
